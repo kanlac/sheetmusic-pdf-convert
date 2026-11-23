@@ -7,7 +7,7 @@ import {spawnSync} from 'node:child_process';
 import vm from 'node:vm';
 import {build} from 'esbuild';
 import {pdf} from './pdf.mjs';
-const script='plugins/sheet-music-pdf-convert/skills/sheet-music-pdf-convert/scripts/identify.mjs';
+const script='plugins/sheetmusic-pdf-convert/skills/sheetmusic-pdf-convert/scripts/identify.mjs';
 
 test('single bundled CLI runs from an isolated directory with no data or dependencies',async()=>{
   const dir=await mkdtemp(path.join(tmpdir(),'tutti-identify-test-'));
@@ -49,11 +49,11 @@ test('both marketplaces resolve the same self-contained plugin and skill',async(
   assert.equal(claude.plugins[0].source,codex.plugins[0].source.path);
   const plugin=claude.plugins[0].source;
   for(const file of ['.claude-plugin/plugin.json','.codex-plugin/plugin.json']) {
-    assert.equal(JSON.parse(await readFile(path.join(plugin,file),'utf8')).name,'sheet-music-pdf-convert');
+    assert.equal(JSON.parse(await readFile(path.join(plugin,file),'utf8')).name,'sheetmusic-pdf-convert');
   }
-  const skillDir=path.join(plugin,'skills/sheet-music-pdf-convert');
+  const skillDir=path.join(plugin,'skills/sheetmusic-pdf-convert');
   const skill=await readFile(path.join(skillDir,'SKILL.md'),'utf8');
-  assert.match(skill,/^---\nname: sheet-music-pdf-convert\n/);
+  assert.match(skill,/^---\nname: sheetmusic-pdf-convert\n/);
   for(const ref of skill.match(/references\/[a-z-]+\.md/g)) await readFile(path.join(skillDir,ref),'utf8');
   await readFile(path.join(skillDir,'scripts/identify.mjs'),'utf8');
 });

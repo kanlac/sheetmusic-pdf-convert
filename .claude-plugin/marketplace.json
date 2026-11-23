@@ -1,12 +1,12 @@
 {
-  "name": "tutti-pdf-converter",
+  "name": "sheetmusic-pdf-convert",
   "owner": {
     "name": "Tutti"
   },
   "plugins": [
     {
-      "name": "sheet-music-pdf-convert",
-      "source": "./plugins/sheet-music-pdf-convert",
+      "name": "sheetmusic-pdf-convert",
+      "source": "./plugins/sheetmusic-pdf-convert",
       "description": "Convert sheet music PDFs to editable MusicXML."
     }
   ]

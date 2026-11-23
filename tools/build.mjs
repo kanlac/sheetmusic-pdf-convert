@@ -3,7 +3,7 @@ import {readFile, chmod} from 'node:fs/promises';
 const license = await readFile(new URL('../packages/identify/vendor/pdf-lib.LICENSE.txt', import.meta.url), 'utf8');
 const check = process.argv.includes('--check');
 for (const name of ['identify', 'review']) {
-  const outfile = `plugins/sheet-music-pdf-convert/skills/sheet-music-pdf-convert/scripts/${name}.mjs`;
+  const outfile = `plugins/sheetmusic-pdf-convert/skills/sheetmusic-pdf-convert/scripts/${name}.mjs`;
   const result = await build({entryPoints: [`packages/${name}/cli.js`], bundle: true, platform: 'node', format: 'esm',
     target: 'node22', outfile, write: !check, minify: true, legalComments: 'inline',
     banner: {js: `/* Vendored pdf-lib license:\n${license}*/`}});

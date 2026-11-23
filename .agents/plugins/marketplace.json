@@ -1,14 +1,14 @@
 {
-  "name": "tutti-pdf-converter",
+  "name": "sheetmusic-pdf-convert",
   "interface": {
     "displayName": "Tutti PDF Converter"
   },
   "plugins": [
     {
-      "name": "sheet-music-pdf-convert",
+      "name": "sheetmusic-pdf-convert",
       "source": {
         "source": "local",
-        "path": "./plugins/sheet-music-pdf-convert"
+        "path": "./plugins/sheetmusic-pdf-convert"
       },
       "policy": {
         "installation": "AVAILABLE",

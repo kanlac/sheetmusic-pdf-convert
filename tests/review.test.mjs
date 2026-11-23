@@ -12,7 +12,7 @@ import {readZip} from '../packages/review/src/zip.js';
 import {review} from '../packages/review/src/index.js';
 import {pageTransform, convertBounds} from '../packages/review/src/pdf.js';
 import {note, attrs, measure, score, omr, mxl} from './review-fixtures.mjs';
-const full = note(16), script = 'plugins/sheet-music-pdf-convert/skills/sheet-music-pdf-convert/scripts/review.mjs';
+const full = note(16), script = 'plugins/sheetmusic-pdf-convert/skills/sheetmusic-pdf-convert/scripts/review.mjs';
 function middle(body) {
   return analyzeMusic(score([measure(1, attrs() + full), measure(2, body), measure(3, full)])).parts[0];
 }

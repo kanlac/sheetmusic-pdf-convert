@@ -1,5 +1,5 @@
 {
-  "name": "tutti-pdf-converter",
+  "name": "sheetmusic-pdf-convert",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -8,7 +8,7 @@
     "node": ">=22"
   },
   "bin": {
-    "identify": "./plugins/sheet-music-pdf-convert/skills/sheet-music-pdf-convert/scripts/identify.mjs"
+    "identify": "./plugins/sheetmusic-pdf-convert/skills/sheetmusic-pdf-convert/scripts/identify.mjs"
   },
   "scripts": {
     "build": "node tools/build.mjs",

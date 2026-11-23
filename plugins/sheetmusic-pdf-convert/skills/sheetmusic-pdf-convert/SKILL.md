@@ -1,5 +1,5 @@
 ---
-name: sheet-music-pdf-convert
+name: sheetmusic-pdf-convert
 description: Turn a sheet music PDF (exported from notation software, scanned, or photographed) into editable MusicXML that opens in MuseScore, Dorico, Sibelius or Finale. Use when the user wants to edit, transpose, re-engrave or play back a score they only have as a PDF, asks to "convert sheet music PDF to MusicXML / MuseScore / Dorico", or hands over a score PDF and asks what can be done with it.
 ---
 

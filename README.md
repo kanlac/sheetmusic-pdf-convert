@@ -1,4 +1,4 @@
-# tutti-pdf-converter
+# sheetmusic-pdf-convert
 
 An AI agent skill that helps turn any sheet music PDF into editable MusicXML: it checks what kind of PDF it is and picks the right way to read it.
 
@@ -11,8 +11,8 @@ Give your AI agent (Claude Code or Codex) a sheet music PDF and ask for a file y
 Claude Code:
 
 ```
-claude plugin marketplace add kanlac/tutti-pdf-converter
-claude plugin install sheet-music-pdf-convert@tutti-pdf-converter
+claude plugin marketplace add kanlac/sheetmusic-pdf-convert
+claude plugin install sheetmusic-pdf-convert@sheetmusic-pdf-convert
 ```
 
 then start a new Claude Code session (or run `/reload-plugins` in an open one).
@@ -20,8 +20,8 @@ then start a new Claude Code session (or run `/reload-plugins` in an open one).
 Codex:
 
 ```
-codex plugin marketplace add kanlac/tutti-pdf-converter
-codex plugin add sheet-music-pdf-convert@tutti-pdf-converter
+codex plugin marketplace add kanlac/sheetmusic-pdf-convert
+codex plugin add sheetmusic-pdf-convert@sheetmusic-pdf-convert
 ```
 
 then start a new Codex session.
@@ -72,12 +72,12 @@ import rules from './packages/identify/data/identify-data.json' with {type: 'jso
 const result = await identify(pdfBytes, {pdfLib, rules});
 ```
 
-Command line: `node plugins/sheet-music-pdf-convert/skills/sheet-music-pdf-convert/scripts/identify.mjs score.pdf --json`.
+Command line: `node plugins/sheetmusic-pdf-convert/skills/sheetmusic-pdf-convert/scripts/identify.mjs score.pdf --json`.
 
 `packages/review` builds the offline Audiveris review helper into the same skill:
 
 ```sh
-node plugins/sheet-music-pdf-convert/skills/sheet-music-pdf-convert/scripts/review.mjs score.mxl original.pdf --out-dir review
+node plugins/sheetmusic-pdf-convert/skills/sheetmusic-pdf-convert/scripts/review.mjs score.mxl original.pdf --out-dir review
 ```
 
 Node 22+ is required. The helper finds the matching `.omr` and single `.log` beside the score (or accepts `--omr` / `--log`). It writes a MusicXML copy with suspect measures in red, a PDF copy with review boxes or page notes, and a JSON summary; stdout includes the JSON and an English explanation. Existing files are never overwritten. Hints cover rhythm, unequal part measure counts and Audiveris diagnostics, including INFO messages. OMR mapping uses the exported systems and logical parts, and uncertain locations stay page-level. These hints miss errors such as pitches and accidentals; unmarked music still needs checking.
