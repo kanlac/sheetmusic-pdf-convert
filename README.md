@@ -1,32 +1,16 @@
 # sheetmusic-pdf-convert
 
-An AI agent skill that helps turn any sheet music PDF into editable MusicXML: it checks what kind of PDF it is and picks the right way to read it.
+Turn a sheet music PDF into a file you can edit in MuseScore, Dorico, Sibelius or Finale. An AI agent skill: it checks what kind of PDF you have and picks the right way to read it.
 
-Give your AI agent (Claude Code or Codex) a sheet music PDF and ask for a file you can edit in MuseScore, Dorico, Sibelius or Finale. The agent looks at the PDF, chooses how to read it, runs what it can for you and tells you what to check afterwards. Scans and photos are read on your computer with the open-source [Audiveris](https://github.com/Audiveris/audiveris); PDFs exported from notation software are processed with [Tutti](https://tutti-studio.com/?utm_source=github&utm_medium=referral&utm_campaign=202611_github_launch&utm_content=readme), which reads the notation data inside the PDF. On the Tutti route you sign in, upload and download on its website yourself; Tutti's conversion engine is an online service and is not part of this repository.
+## One sentence
 
-**Don't use an AI agent?** If your PDF was exported from notation software, you can [convert it on the Tutti website](https://tutti-studio.com/?utm_source=github&utm_medium=referral&utm_campaign=202611_github_launch&utm_content=readme) directly.
+Paste this into Claude, Codex or another AI assistant that can run commands on your computer:
 
-## Install
+> Read https://github.com/kanlac/sheetmusic-pdf-convert, set it up for me, then turn `<path to your PDF>` into something I can edit in MuseScore.
 
-Claude Code:
+The assistant installs the skill and does the rest. You answer a few yes/no questions.
 
-```
-claude plugin marketplace add kanlac/sheetmusic-pdf-convert
-claude plugin install sheetmusic-pdf-convert@sheetmusic-pdf-convert
-```
-
-then start a new Claude Code session (or run `/reload-plugins` in an open one).
-
-Codex:
-
-```
-codex plugin marketplace add kanlac/sheetmusic-pdf-convert
-codex plugin add sheetmusic-pdf-convert@sheetmusic-pdf-convert
-```
-
-then start a new Codex session.
-
-Then just ask, for example: *"Turn score.pdf into something I can edit in MuseScore."*
+**No AI assistant?** If your PDF was exported from notation software, you can [convert it on the Tutti website](https://tutti-studio.com/?utm_source=github&utm_medium=referral&utm_campaign=202611_github_launch&utm_content=readme) directly.
 
 ## What happens
 
@@ -42,48 +26,33 @@ After an Audiveris run you get a copy of your PDF with the doubtful places boxed
 
 ![Review copy of a scanned Schubert song with doubtful measures boxed in red](docs/images/review-pdf-example.png)
 
-## Mistakes the skill keeps your agent from making
 
-We ran real scans through Audiveris and agents end to end, and wrote down what went wrong. These are the ones that look reasonable and cost the most:
+## Install by hand
 
-- **Reading the music off the page image itself.** An agent asked to "convert" a scan may look at it and write MusicXML by hand. It invents pitches and rhythms with full confidence, which is worse than OMR and harder to catch.
-- **Sending an exported PDF to OMR.** People call any PDF a "scan". If the PDF came out of notation software, OMR throws away exact data that is sitting in the file.
-- **Running Audiveris without OCR language data.** It still exports notes, but every lyric, tempo word and instrument name silently disappears (same scan: 95 lyric syllables with the data, 0 without). The "fast" and "best" Tesseract models don't work here; Audiveris needs the legacy ones.
-- **Feeding it a title or text page.** One page without music can make the whole run end with no export at all.
-- **Believing exit code 0.** Files come out with a bar missing from one part, a staff split into extra parts, or only one surviving fragment. The skill counts measures per part before calling anything done.
-- **Turning Audiveris's log into bar numbers.** `Measure{#11P2}` is an internal label, not "bar 11 of the second instrument". The skill points to the page instead of inventing a precise location.
-- **Fighting a bad phone photo.** Installing image tools or uploading pages to online services rarely rescues it. The skill runs once, then gives retake advice or names tools made for photos.
+Claude Code:
 
-## What to expect
-
-OMR (reading music from an image) gives you a draft to correct. In our test batch of real scans (songs for voice and piano, 1–4 pages), Audiveris produced a file every time, but most needed structural fixes such as a missing bar or a staff split in two, and our synthetic phone-style photos failed to export. Clean scans of simple music work best. The red marks show where Audiveris itself noticed trouble; in our tests they caught only a minority of the measures that had wrong notes, so treat them as a starting point, not a list of every error.
-
-Tested on macOS (Apple silicon) with Claude Code and Codex in November 2026. On Windows and Linux the agent adapts the same steps, but we have not tested them.
-
-## For developers
-
-`packages/identify` is the PDF identifier the skill uses: plain ES modules that run in Node and the browser, no network access. It reports the kind of PDF (vector / scan / outlined / mixed / unknown / unreadable) with per-page evidence, the notation programs it probably came from, and whether Tutti is likely to read it.
-
-```js
-import {identify} from './packages/identify/src/index.js';
-import * as pdfLib from './packages/identify/vendor/pdf-lib.esm.min.js';
-import rules from './packages/identify/data/identify-data.json' with {type: 'json'};
-
-const result = await identify(pdfBytes, {pdfLib, rules});
+```
+claude plugin marketplace add kanlac/sheetmusic-pdf-convert
+claude plugin install sheetmusic-pdf-convert@sheetmusic-pdf-convert
 ```
 
-Command line: `node plugins/sheetmusic-pdf-convert/skills/sheetmusic-pdf-convert/scripts/identify.mjs score.pdf --json`.
+Codex:
 
-`packages/review` builds the offline Audiveris review helper into the same skill:
-
-```sh
-node plugins/sheetmusic-pdf-convert/skills/sheetmusic-pdf-convert/scripts/review.mjs score.mxl original.pdf --out-dir review
+```
+codex plugin marketplace add kanlac/sheetmusic-pdf-convert
+codex plugin add sheetmusic-pdf-convert@sheetmusic-pdf-convert
 ```
 
-Node 22+ is required. The helper finds the matching `.omr` and single `.log` beside the score (or accepts `--omr` / `--log`). It writes a MusicXML copy with suspect measures in red, a PDF copy with review boxes or page notes, and a JSON summary; stdout includes the JSON and an English explanation. Existing files are never overwritten. Hints cover rhythm, unequal part measure counts and Audiveris diagnostics, including INFO messages. OMR mapping uses the exported systems and logical parts, and uncertain locations stay page-level. These hints miss errors such as pitches and accidentals; unmarked music still needs checking.
+Then start a new session. Node.js 22 or newer is needed; the assistant installs it if it is missing.
 
-`npm test` runs the tests; `npm run build` rebuilds both single-file scripts bundled in the skill, and `npm run build:check` checks that they match the source.
+## For AI assistants
 
-## License
+You were probably sent here by a user. They are not a developer: install the skill for them without asking about each step (your app has its own permission prompts), including Node.js if it is missing. Use the Claude Code or Codex commands above; with any other app, copy `plugins/sheetmusic-pdf-convert/skills/sheetmusic-pdf-convert/` into the user-level skills folder it reads. Then read that folder's `SKILL.md` and follow it with the user's PDF.
+
+## More
+
+[Lessons from real runs](docs/lessons.md) · [For developers](docs/developers.md)
+
+Tested on macOS (Apple silicon) with Claude Code and Codex in November 2026. OMR (reading music from an image) gives a draft to correct, not a finished score.
 
 MIT. Audiveris is a separate program under AGPL-3.0; this repository only tells your agent where to get it and how to run it.
