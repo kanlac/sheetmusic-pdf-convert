@@ -1,7 +1,7 @@
 {
   "name": "sheetmusic-pdf-convert",
   "interface": {
-    "displayName": "Tutti PDF Converter"
+    "displayName": "Sheet Music PDF Convert"
   },
   "plugins": [
     {
