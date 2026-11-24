@@ -10,15 +10,15 @@ Paste this into Claude, Codex or another AI assistant that can run commands on y
 
 The assistant installs the skill and does the rest. You answer a few yes/no questions.
 
-**No AI assistant?** If your PDF was exported from notation software, you can [convert it on the Tutti website](https://tutti-studio.com/?utm_source=github&utm_medium=referral&utm_campaign=202611_github_launch&utm_content=readme) directly.
+**No AI assistant?** If your PDF was exported from notation software and keeps its music fonts, you can [convert it on the Tutti website](https://tutti-studio.com/?utm_source=github&utm_medium=referral&utm_campaign=202611_github_launch&utm_content=readme) directly.
 
 ## What happens
 
 | Your PDF | What the agent does |
 |---|---|
-| Exported from notation software: Sibelius, or simple scores from MuseScore, Dorico and Finale ([current limits](https://tutti-studio.com/?utm_source=github&utm_medium=referral&utm_campaign=202611_github_launch&utm_content=readme)) | Recommends Tutti, which reads the notes the program drew instead of guessing from pixels. You upload it on the Tutti website after agreeing to its [privacy policy](https://tutti-studio.com/privacy). Reading it locally with Audiveris is offered as an alternative |
-| A scan or photo of printed music | Installs Audiveris on your computer (asking first), adds the OCR language data it needs for lyrics and text, runs it, and gives you two things to check against the original: the MusicXML with doubtful measures marked red, and a copy of your PDF with those places boxed |
-| Not sure, handwritten, damaged, or something Tutti declines | Explains what it found and what your options are; some of these end with a recommendation rather than a file |
+| Exported from Sibelius, MuseScore, Dorico, Finale or other notation software, with music-font characters preserved | Recommends Tutti, which reads the notation data in the PDF. You upload it on the Tutti website after agreeing to its [privacy policy](https://tutti-studio.com/privacy). Reading it locally with Audiveris is offered as an alternative |
+| A scan or photo of printed music, or a PDF with music symbols turned into outlines | Installs Audiveris on your computer (asking first), adds the OCR language data it needs for lyrics and text, runs it, and gives you two things to check against the original: the MusicXML with doubtful measures marked red, and a copy of your PDF with those places boxed |
+| Unidentified, handwritten or damaged | Explains what it found and what your options are; some of these end with a recommendation rather than a file |
 
 Nothing is uploaded unless you agree. The PDF check runs offline, Audiveris runs on your computer, and only the Tutti route sends a file to a server.
 

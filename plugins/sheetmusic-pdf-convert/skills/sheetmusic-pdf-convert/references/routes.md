@@ -12,25 +12,25 @@
 | `scan` | Pages are images: a scanner, a camera, or a PDF saved from photos |
 | `outlined` | Vector drawing but no fonts: the symbols were turned into shapes |
 | `mixed` | Some pages of one kind, some of another. Often harmless (a scanned or decorated cover before a vector score), sometimes a real mix |
-| `unknown` | Not enough evidence either way (for example an unregistered music font) |
+| `unknown` | Not enough evidence either way (for example an unrecognized music font) |
 | `unreadable` | Not a PDF, empty, password-protected or broken; see `pdf.reasons` |
 
 **`sources`**: notation programs the metadata or fonts point to. There can be several; that is normal for scores assembled from different files.
 
-**`tutti.status`**: `likely`, `unlikely` or `unknown`, with `reasons`. This is routing advice from rules bundled with this skill, and those rules may be older than the Tutti website. `websiteLimits` says whether the file is over the website's size or page limits; it does not affect the local route.
+**`tutti.status`**: `likely`, `unlikely` or `unknown`, with `reasons`. The verdict is based on the PDF content.
 
 ## Routes
 
 | Situation | Route |
 |---|---|
-| `tutti.status` is `likely` | Strongly recommend Tutti (`tutti.md`); offer Audiveris as the local alternative, noting it is usually less accurate for this kind of PDF |
-| `unknown` or `unlikely`, and `kind` is `vector` or `mixed` | Suggest trying the Tutti website first, since it decides on upload; keep Audiveris as an option. Do not present local "unlikely" as a refusal |
-| `kind` is `scan`, `outlined`, or a `mixed` file whose music pages are scans | Audiveris (`audiveris.md`) |
+| Music pages preserve music-font characters | Tutti (`tutti.md`), with Audiveris as the local alternative |
+| Music pages are scans, photos or outlines | Audiveris (`audiveris.md`) on the user's computer |
+| The music pages are unclear | Check the per-page evidence or ask how the PDF was made |
 | `unreadable` | Explain the reason in `pdf.reasons` (for example, ask for the version without a password) |
 
-For a `mixed` file, look at `pdf.pages` to see which pages hold the music before deciding. If only a cover or an instructions page differs, treat the file by its music pages. A page that is `mixed` because it has a full-page image plus text fonts but no `musicFonts` is usually a scan with an OCR text layer (IMSLP adds these); treat it as a scan.
+For a `mixed` file, look at `pdf.pages` to see which pages hold the music before deciding. If only a cover or an instructions page differs, treat the file by its music pages. A full-page image with OCR text and no music-font evidence is a scan (IMSLP often adds OCR text). If some music pages preserve music fonts and others are scans, route each group of pages separately.
 
-The identifier cannot tell how complex the music is or whether it is handwritten. Look at a page yourself if the user can share it, or ask; for handwritten music see `omr-tools.md`.
+For handwritten music, see `omr-tools.md`.
 
 ## Several files
 

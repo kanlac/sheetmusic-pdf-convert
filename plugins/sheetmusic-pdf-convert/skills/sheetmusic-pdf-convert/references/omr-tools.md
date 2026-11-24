@@ -15,6 +15,6 @@ For when neither Tutti nor Audiveris fits. Prices, editions and platforms change
 
 - **Audiveris left most of a clear scan unread**: a desktop scan tool (ScanScore, SmartScore, PhotoScore).
 - **It's a phone photo and retaking isn't possible**: PlayScore 2 or the Soundslice scanner, which are made for photos.
-- **The PDF came from notation software but Tutti declines it**: PDFtoMusic Pro reads the same kind of PDF; results will differ from Tutti's.
+- **The user wants to read an exported PDF locally**: PDFtoMusic Pro reads the PDF's vector data.
 - **Handwritten music**: PhotoScore & NotateMe Ultimate says it reads handwriting; suggest a trial on one page first, with no promise. Re-entering by hand is the dependable fallback.
 - **The user cannot install software** (managed computer): only the web options (Tutti, Soundslice) need no installation, and both upload the file.

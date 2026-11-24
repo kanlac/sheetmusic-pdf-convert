@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import {identify} from '../packages/identify/src/index.js';
 import rules from '../packages/identify/data/identify-data.json' with {type:'json'};
 import {lib, pdf, encrypted, font, content} from './pdf.mjs';
-const inspect = (bytes, data=rules) => identify(bytes,{pdfLib:lib,rules:data});
+const inspect = bytes => identify(bytes,{pdfLib:lib,rules});
 
 for (const [label, kinds, expected, status] of [
-  ['registered music',['vector'],'vector','likely'],
+  ['music fonts',['vector'],'vector','likely'],
   ['image only',['scan'],'scan','unlikely'],
   ['OCR image and text',['ocr'],'mixed','unknown'],
   ['text cover then scans',['text','scan'],'mixed','unknown'],
@@ -27,36 +27,20 @@ for (const [label, kinds, expected, status] of [
   assert.ok(result.tutti.reasons.every(r=>r.code&&r.text));
 });
 
-test('sources retain conflicting candidates without claiming likely',async()=>{
+test('conflicting source evidence does not change the vector verdict',async()=>{
   const result=await inspect(await pdf(['vector'],{creator:'Finale 27'}));
   assert.deepEqual(result.sources.map(s=>s.id),['finale','sibelius']);
-  assert.equal(result.tutti.status,'unknown');
-  assert.equal(result.tutti.reasons[0].code,'source_conflict');
+  assert.equal(result.tutti.status,'likely');
+  assert.equal(result.tutti.reasons[0].code,'vector');
 });
 
-test('unused registered fonts cannot turn a scan or text page into vector music',async()=>{
+test('unused music fonts cannot turn a scan or text page into vector music',async()=>{
   for(const kind of ['scan','ocr','text']) {
     const result=await inspect(await pdf([kind],{unusedMusic:true}));
     assert.notEqual(result.tutti.status,'likely');
     assert.equal(result.pdf.pages[0].musicFonts.length,0);
     assert.ok(result.pdf.pages[0].fonts.includes('OpusStd'));
   }
-});
-
-test('rule parameters and website limits are injected, limits do not affect routing',async()=>{
-  const bytes=await pdf(['vector']);
-  const result=await inspect(bytes,{...rules,limits:{pdfBytes:1,pdfPages:0}});
-  assert.equal(result.tutti.status,'likely');
-  assert.equal(result.websiteLimits.exceedsBytes,true);assert.equal(result.websiteLimits.exceedsPages,true);
-  const disabled={...rules,profiles:rules.profiles.map(r=>({...r,enabled:false}))};
-  assert.equal((await inspect(bytes,disabled)).tutti.status,'unlikely');
-});
-
-test('font release status is honored',async()=>{
-  const data={...rules,releases:rules.releases.map(r=>({...r,enabled:false}))};
-  const result=await inspect(await pdf(['vector']),data);
-  assert.equal(result.tutti.status,'unlikely');
-  assert.equal(result.tutti.reasons[0].code,'snapshot_disabled');
 });
 
 for(const [label,bytes,code] of [['encrypted',encrypted(),'encrypted'],['empty',new Uint8Array(),'empty'],
@@ -108,16 +92,28 @@ test('literal strings cannot introduce operators and dependencies are required',
 });
 
 for(const [creator,fontName,id] of [['Sibelius','HelsinkiStd','sibelius'],['MuseScore Studio 4.5','Leland','musescore'],
-  ['Dorico 6','Bravura','dorico'],['Finale 27','Maestro','finale']]) {
-  test(`released vector family ${fontName}`,async()=>{
+  ['Dorico 6','Bravura','dorico'],['Finale 27','Maestro','finale'],['Sibelius','Inkpen2Std','sibelius'],
+  ['Dorico 6','Petaluma','dorico'],['Other Notation Software','Bravura',null]]) {
+  test(`vector music in ${fontName} exported by ${creator}`,async()=>{
     const doc=await lib.PDFDocument.create();doc.setCreator(creator);doc.setProducer('');const page=doc.addPage();
     page.node.setFontDictionary(lib.PDFName.of('F1'),font(doc,fontName));
     content(doc,page,'BT /F1 12 Tf (q) Tj ET');
     const result=await inspect(await doc.save());
     assert.equal(result.pdf.kind,'vector');assert.equal(result.tutti.status,'likely');
-    assert.ok(result.sources.some(source=>source.id===id));
+    if (id) assert.ok(result.sources.some(source=>source.id===id));
+    else assert.deepEqual(result.sources,[]);
   });
 }
+
+test('a notation program and its text font alone do not establish vector music',async()=>{
+  const doc=await lib.PDFDocument.create();doc.setCreator('Dorico');const page=doc.addPage();
+  page.node.setFontDictionary(lib.PDFName.of('F1'),font(doc,'Academico'));
+  content(doc,page,'BT /F1 12 Tf (Title) Tj ET');
+  const result=await inspect(await doc.save());
+  assert.equal(result.pdf.kind,'unknown');
+  assert.equal(result.tutti.status,'unknown');
+  assert.deepEqual(result.sources.map(source=>source.id),['dorico']);
+});
 
 test('the generated encrypted fixture opens with its password',async()=>{
   const doc=await lib.PDFDocument.load(encrypted(),{password:'secret',updateMetadata:false});

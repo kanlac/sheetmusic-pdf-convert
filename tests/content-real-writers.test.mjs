@@ -128,11 +128,11 @@ test('an unpainted pattern does not contribute fonts or images',async()=>{
 });
 
 
-test('legacy source fingerprints establish vector evidence without granting unsupported font releases',async()=>{
+test('legacy font fingerprints establish vector notation even without an exact font match',async()=>{
   const {doc,page}=await document();
   page.node.setFontDictionary(N('Legacy'),font(doc,'Helsinki'));
   content(doc,page,'BT /Text 12 Tf (title) Tj /Legacy 12 Tf (q) Tj ET 0 0 m 20 20 l S');
-  const r=await inspect(doc);assert.equal(r.pdf.kind,'vector');assert.equal(r.tutti.status,'unknown');
+  const r=await inspect(doc);assert.equal(r.pdf.kind,'vector');assert.equal(r.tutti.status,'likely');
   assert.deepEqual(r.pdf.pages[0].candidateMusicFonts,['Helsinki']);
   assert.deepEqual(r.pdf.pages[0].musicFonts,[]);
 });
@@ -151,7 +151,7 @@ for(const mapping of ['1 beginbfchar <71> <E050> endbfchar', '1 beginbfchar <71>
   '1 beginbfrange <71> <72> [<E050> <E051>] endbfrange',
   '1 beginbfrange <71> <72> <E050> endbfrange',
   '1 beginbfchar <71> <DB80DC01> endbfchar']) {
-  test(`unregistered private-use-only symbols require confirmation: ${mapping}`,async()=>{
+  test(`private-use-only fonts are reported alongside vector evidence: ${mapping}`,async()=>{
     const {doc,page}=await document();const custom=font(doc,'CustomSymbols');
     doc.context.lookup(custom).set(N('ToUnicode'),doc.context.register(doc.context.stream(
       `/CIDInit /ProcSet findresource begin 12 dict begin begincmap /CMapName /Custom def /CMapType 2 def
@@ -160,8 +160,7 @@ ${mapping}
 endcmap CMapName currentdict /CMap defineresource pop end end`)));
     page.node.setFontDictionary(N('Custom'),custom);
     content(doc,page,'BT /Music 12 Tf (q) Tj /Custom 12 Tf (q) Tj ET');
-    const r=await inspect(doc);assert.equal(r.pdf.kind,'vector');assert.equal(r.tutti.status,'unknown');
-    assert.equal(r.tutti.reasons[0].code,'unregistered_symbols');
+    const r=await inspect(doc);assert.equal(r.pdf.kind,'vector');assert.equal(r.tutti.status,'likely');
     assert.ok(r.pdf.pages[0].privateUseOnlyFonts.includes('CustomSymbols'));
   });
 }
@@ -173,6 +172,7 @@ test('ordinary text with an occasional private-use character is not a private-us
   page.node.setFontDictionary(N('Custom'),custom);
   content(doc,page,'BT /Music 12 Tf (q) Tj /Custom 12 Tf (q) Tj ET');
   const r=await inspect(doc);assert.equal(r.tutti.status,'likely');
+  assert.deepEqual(r.pdf.pages[0].privateUseOnlyFonts,[]);
 });
 
 
@@ -183,4 +183,5 @@ test('an inherited Unicode CMap cannot establish that a font has only private-us
   page.node.setFontDictionary(N('Custom'),custom);
   content(doc,page,'BT /Music 12 Tf (q) Tj /Custom 12 Tf (q) Tj ET');
   const r=await inspect(doc);assert.equal(r.tutti.status,'likely');
+  assert.deepEqual(r.pdf.pages[0].privateUseOnlyFonts,[]);
 });

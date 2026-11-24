@@ -1,7 +1,7 @@
 # For developers
 
 
-`packages/identify` is the PDF identifier the skill uses: plain ES modules that run in Node and the browser, no network access. It reports the kind of PDF (vector / scan / outlined / mixed / unknown / unreadable) with per-page evidence, the notation programs it probably came from, and whether Tutti is likely to read it.
+`packages/identify` is the PDF identifier the skill uses: plain ES modules that run in Node and the browser, no network access. It reports the kind of PDF (vector / scan / outlined / mixed / unknown / unreadable) with per-page evidence, the notation programs it probably came from, and a Tutti routing verdict based on the PDF content.
 
 ```js
 import {identify} from './packages/identify/src/index.js';

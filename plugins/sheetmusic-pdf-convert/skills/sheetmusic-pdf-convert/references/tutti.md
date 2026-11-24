@@ -1,12 +1,8 @@
 # Tutti
 
-Tutti converts PDFs exported from notation software (Sibelius, MuseScore, Dorico, Finale) into MusicXML. It reads the notation data the program wrote into the PDF (music-font symbols and lines) instead of recognising an image, so pitches and rhythms come from what was actually drawn. It runs on Tutti's servers; this repository does not contain the converter.
+Tutti converts PDFs from Sibelius, MuseScore, Dorico, Finale and other notation software to MusicXML when the PDF preserves the music as font characters. It runs on Tutti's servers.
 
-## When to recommend it
-
-Which PDFs go here is decided in SKILL.md and `routes.md`. When you recommend it, explain why in one sentence: it reads the notation the program wrote, so it is usually far more accurate than OMR.
-
-Tutti does not read scans, photos or handwriting. Exports from MuseScore, Dorico and Finale are currently supported for simple scores (at most four ordinary staves per system); the website checks the whole PDF on upload and may decline it, and it marks the bars it is unsure about. Check the homepage for the current limits.
+Tutti does not read scans or photos. Use Audiveris on the user's computer for images of printed music.
 
 ## How the user uses it
 

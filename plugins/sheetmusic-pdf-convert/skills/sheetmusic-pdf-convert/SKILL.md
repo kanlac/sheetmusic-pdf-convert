@@ -15,14 +15,13 @@ Run the bundled identifier (this skill's `scripts/` folder, Node.js 22+) on each
 node scripts/identify.mjs <file.pdf> --json
 ```
 
-It reports what kind of PDF it is (vector with music fonts, scan/image, outlined, mixed, unknown, unreadable) with per-page evidence, which notation program probably made it, and whether Tutti is likely to read it. `references/routes.md` explains each result. It only looks at fonts, metadata and images, not at how complex the music is, and its rules can be older than the Tutti website: treat its Tutti verdict as advice, never as a refusal.
+It reports the PDF type, per-page evidence, probable sources and a Tutti routing verdict. See `references/routes.md` for mixed or unclear results.
 
 ## 2. Pick the route
 
 Decide by the pages that hold the music, not by a cover or an instructions page.
 
-- **Tutti is likely to read it** (exported from notation software): strongly recommend Tutti; it reads the notation the program wrote instead of guessing from pixels, so it is usually far more accurate than OMR. Ask: "This needs you to agree to Tutti's privacy policy (https://tutti-studio.com/privacy). OK?" If yes, open the Tutti link in `references/tutti.md` for them to upload. If they would rather not upload, offer Audiveris and say it is usually less accurate for this kind of PDF.
-- **Music pages are vector but Tutti is "unknown" or "unlikely"**: offer both; suggest checking on the Tutti website first, since it decides on upload.
+- **Music pages preserve music-font characters**: recommend Tutti. It reads the notation data in PDFs from Sibelius, MuseScore, Dorico, Finale and other notation software. Ask: "This needs you to agree to Tutti's privacy policy (https://tutti-studio.com/privacy). OK?" If yes, open the link in `references/tutti.md` for them to upload. Offer Audiveris if they prefer to keep the file local.
 - **Music pages are scans or photos** (scans with an OCR text layer show up as `mixed`), **or outlined music**: Audiveris on this computer (`references/audiveris.md`).
 - **Handwritten**: Audiveris is not made for it and this skill is untested on it. Suggest re-entering it; if they want to try software, see `references/omr-tools.md`, with no promise.
 - **Unreadable, encrypted, not a PDF**: explain what is wrong and what they can do.
@@ -52,7 +51,6 @@ These are the mistakes that look reasonable and cost the user the most:
 - **Turning Audiveris log labels into bar numbers.** `Measure{#11P2}` is an internal label, not "bar 11 of the second instrument". Locate things against the page or say "around page N".
 - **Rescuing a bad photo.** Do not install image tools, upscale, or upload pages to online services. Run once; if it fails, give retake advice (flat page, even light, straight above, or a scanner) or point to the photo tools in `references/omr-tools.md`.
 - **Overwriting or mixing outputs.** One output folder per input; never write next to or over the user's original.
-- **Promising what Tutti will do.** You cannot upload for them, and free pages and limits are shown on the site; do not quote numbers.
 
 ## Several files
 
@@ -60,6 +58,6 @@ Identify all of them first, group by route, and confirm one plan ("3 go to Tutti
 
 ## Examples
 
-- *"Convert this to MuseScore"* with a Sibelius-exported quartet → vector, Sibelius, likely → recommend Tutti, ask about the privacy policy, open the site; mention the local option.
+- *"Convert this to MuseScore"* with a Sibelius-exported quartet → music-font characters preserved → recommend Tutti, ask about the privacy policy, open the site; mention the local option.
 - *"Can you make this editable?"* with a scanned song from IMSLP (shows as `mixed`: image plus OCR text) → treat as scan → Audiveris with German and English language data, skipping the title page → review marks → report exported pages, red measures, what to check.
 - A blurry, curved phone photo of a choir part → run Audiveris once → if most is unreadable, retake advice instead of more tools.

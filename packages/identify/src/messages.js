@@ -26,11 +26,6 @@ export const MESSAGES = Object.freeze({
   unknown: 'The PDF kind could not be confirmed.',
   incomplete: 'Some page content could not be inspected completely.',
   vector: 'Painted music-font evidence was found, with no scan evidence on the inspected pages.',
-  source_conflict: 'Source evidence is ambiguous or conflicting.',
-  snapshot_disabled: 'The bundled data does not enable this software or font.',
-  unregistered_symbols: 'An unregistered font uses only private-use Unicode characters. Compatibility needs confirmation.',
-  unconfirmed: 'The bundled data cannot confirm compatibility.',
-  try_tutti: 'Worth trying Tutti. This is a routing suggestion; confirm compatibility on the website.',
 });
 export const reason = code => ({code, text: MESSAGES[code]});
 
